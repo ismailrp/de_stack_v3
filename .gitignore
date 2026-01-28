@@ -1,0 +1,93 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# Airflow
+airflow-logs/
+airflow-logs.db
+airflow.cfg
+airflow-webserver.pid
+dags/.ignore
+*.dag
+*.dag.yaml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# NiFi
+nifi_data/
+nifi_flowfile_repository/
+nifi_content_repository/
+nifi_provenance_repository/
+nifi_database_repository/
+
+# Elasticsearch
+es_data/
+
+# PostgreSQL
+postgres_data/
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Docker
+.docker/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Data files
+*.csv
+*.json
+*.parquet
+*.xlsx
+data/
+raw_data/
+processed_data/

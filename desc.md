@@ -1,0 +1,5 @@
+airflow
+nifi
+elasticsearch
+kibana
+postgres

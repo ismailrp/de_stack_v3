@@ -1,0 +1,27 @@
+# PostgreSQL Connection
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=airflow
+POSTGRES_PASSWORD=airflow
+POSTGRES_DB=airflow
+
+# Elasticsearch Connection
+ES_HOST=localhost
+ES_PORT=9200
+ES_PROTO=http
+
+# Airflow Connection
+AIRFLOW_HOST=localhost
+AIRFLOW_PORT=8080
+AIRFLOW_USER=admin
+AIRFLOW_PASSWORD=admin
+
+# NiFi Connection
+NIFI_HOST=localhost
+NIFI_PORT=19000
+NIFI_USER=admin
+NIFI_PASSWORD=AdminPass123!
+
+# Kibana Connection
+KIBANA_HOST=localhost
+KIBANA_PORT=5601

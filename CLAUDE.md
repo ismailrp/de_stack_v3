@@ -34,10 +34,12 @@ docker compose restart airflow-scheduler
 | Service | URL | Credentials |
 |---------|-----|-------------|
 | Airflow Web UI | http://localhost:8080 | admin/admin |
-| NiFi Web UI | http://localhost:9300 | admin/admin123 |
+| NiFi Web UI | http://localhost:19000/nifi | admin/AdminPass123! |
 | Elasticsearch | http://localhost:9200 | (none) |
 | Kibana | http://localhost:5601 | (none) |
 | PostgreSQL | localhost:5432 | airflow/airflow |
+
+**Important:** Access all services from Windows browser (not WSL) when using Docker Desktop on WSL2.
 
 ## Architecture
 
@@ -83,3 +85,71 @@ When adding DAGs, place Python files in `./dags/`. They will be automatically pi
 - Airflow uses an empty `FERNET_KEY` for development. Change this for production.
 - NiFi data persists across container restarts via named volumes.
 - All containers have `restart: unless-stopped` except `airflow-init` which is a one-time job.
+
+## R Development Stack
+
+The project includes an R development environment for data analysis and API interaction with the Docker services.
+
+### Setup
+
+```bash
+# Install R packages (run from R console in project directory)
+Rscript -e "source('R/install_r_packages.R')"
+```
+
+### Project Structure
+
+```
+R/
+├── install_r_packages.R       # Package installation script
+├── examples/
+│   ├── postgres_connection.R      # PostgreSQL connection examples
+│   ├── elasticsearch_connection.R # Elasticsearch examples
+│   ├── airflow_api.R              # Airflow REST API examples
+│   └── nifi_api.R                 # NiFi REST API examples
+└── README.md
+```
+
+### Environment Variables
+
+Connection details are loaded from `.Renviron` in the project root:
+
+```r
+# Access connection details from R
+host <- Sys.getenv("POSTGRES_HOST")  # "localhost"
+port <- Sys.getenv("POSTGRES_PORT")  # "5432"
+```
+
+### Example: PostgreSQL Query from R
+
+```r
+library(DBI)
+library(RPostgres)
+
+con <- dbConnect(
+  RPostgres::Postgres(),
+  host = Sys.getenv("POSTGRES_HOST"),
+  port = as.integer(Sys.getenv("POSTGRES_PORT")),
+  user = Sys.getenv("POSTGRES_USER"),
+  password = Sys.getenv("POSTGRES_PASSWORD"),
+  dbname = Sys.getenv("POSTGRES_DB")
+)
+
+result <- dbGetQuery(con, "SELECT * FROM dag_run LIMIT 10")
+dbDisconnect(con)
+```
+
+### Example: Elasticsearch Query from R
+
+```r
+library(elastic)
+
+es <- elastic::connect("http://localhost:9200")
+health <- elastic::cluster_health(es)
+```
+
+### VS Code Setup
+
+1. Install the **R Extension for Visual Studio Code** (REDCap)
+2. Open `.R` files - the extension provides IntelliSense and debugging
+3. Use `Ctrl+Enter` to send code to the R terminal

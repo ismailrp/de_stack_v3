@@ -91,3 +91,16 @@ htmlcov/
 data/
 raw_data/
 processed_data/
+
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+*.Rhistory
+*.RData
+
+# R packages (if installed locally)
+R/packages/
+R/library/

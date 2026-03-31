@@ -36,6 +36,30 @@ services:
     networks:
       - de_network
 
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.0
+    container_name: de_logstash
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+      - ./logstash/config:/usr/share/logstash/config:ro
+    ports:
+      - "15044:5044"  # Beats input
+      - "19600:9600"  # Logstash monitoring API
+    environment:
+      - "LS_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9600/_node/stats || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - de_network
+
   kibana:
     image: docker.elastic.co/kibana/kibana:8.11.0
     container_name: de_kibana
@@ -44,7 +68,8 @@ services:
     ports:
       - "5601:5601"
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
     networks:
       - de_network
 

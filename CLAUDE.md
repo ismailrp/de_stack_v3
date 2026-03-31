@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Docker Compose-based Data Engineering stack that orchestrates a complete data pipeline with Airflow, NiFi, Elasticsearch, Kibana, and PostgreSQL.
+This is a Docker Compose-based Data Engineering stack that orchestrates a complete data pipeline with Airflow, NiFi, ELK Stack (Elasticsearch, Logstash, Kibana), and PostgreSQL.
 
 ## Common Commands
 
@@ -36,6 +36,8 @@ docker compose restart airflow-scheduler
 | Airflow Web UI | http://localhost:8080 | admin/admin |
 | NiFi Web UI | http://localhost:19000/nifi | admin/AdminPass123! |
 | Elasticsearch | http://localhost:9200 | (none) |
+| Logstash API | http://localhost:19600 | (none) |
+| Logstash Beats | localhost:15044 | (none) |
 | Kibana | http://localhost:5601 | (none) |
 | PostgreSQL | localhost:5432 | airflow/airflow |
 
@@ -46,7 +48,7 @@ docker compose restart airflow-scheduler
 **Startup Order & Dependencies:**
 1. `postgres` must be healthy before `airflow-init` runs
 2. `airflow-init` must complete (runs DB migrations, creates admin user) before `airflow-webserver` and `airflow-scheduler`
-3. `elasticsearch` must be healthy before `kibana` starts
+3. `elasticsearch` must be healthy before `logstash` and `kibana` start
 4. `nifi` starts independently
 
 **Network:** All services communicate via `de_network` bridge network. Use service names as hostnames (e.g., `postgres:5432`, `elasticsearch:9200`).
@@ -78,6 +80,15 @@ When adding DAGs, place Python files in `./dags/`. They will be automatically pi
 - **Mode:** Single-node (development)
 - **Security:** Disabled (`xpack.security.enabled=false`)
 - **Heap:** 512m min/max
+
+## Logstash Configuration
+
+- **Version:** 8.11.0
+- **Beats Port:** 15044 (host) → 5044 (container)
+- **Monitoring API:** 19600 (host) → 9600 (container)
+- **Pipeline Config:** `./logstash/pipeline/*.conf`
+- **Heap:** 512m min/max
+- **See:** `logstash/README.md` for usage examples
 
 ## Development Notes
 
